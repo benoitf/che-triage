@@ -3,12 +3,14 @@ import 'reflect-metadata';
 import { Analysis } from '../src/analysis';
 import { Container } from 'inversify';
 import { Handler } from '../src/api/handler';
+import { bindMultiInjectProvider } from '../src/api/multi-inject-provider';
 
 describe('Test Analysis', () => {
   let container: Container;
 
   beforeEach(() => {
     container = new Container();
+    bindMultiInjectProvider(container, Handler);
     container.bind(Analysis).toSelf().inSingletonScope();
   });
 

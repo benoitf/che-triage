@@ -3,9 +3,10 @@ import { inject, injectable, postConstruct } from 'inversify';
 import { IssueCommentAction } from '../actions/issue-comment-action';
 import { IssueCommentInfo } from '../info/issue-comment-info';
 import { RemoveLabelHelper } from '../helpers/remove-label-helper';
+import { Logic } from '../api/logic';
 
 @injectable()
-export class RemoveLifeCycleStaleLogic {
+export class RemoveLifeCycleStaleLogic implements Logic {
   public static readonly REMOVE_LIFECYCLE_STALE_COMMAND: string = '/remove-lifecycle stale';
   public static readonly LABEL_TO_REMOVE: string = 'lifecycle/stale';
 

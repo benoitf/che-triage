@@ -1,16 +1,17 @@
-import { injectable, multiInject, optional } from 'inversify';
+import { inject, injectable, named } from 'inversify';
 
 import { Context } from '@actions/github/lib/context';
 import { Handler } from './api/handler';
+import { MultiInjectProvider } from './api/multi-inject-provider';
 
 @injectable()
 export class Analysis {
-  @optional()
-  @multiInject(Handler)
-  protected readonly handlers: Handler[];
+  @inject(MultiInjectProvider)
+  @named(Handler)
+  protected readonly handlers: MultiInjectProvider<Handler>;
 
   async analyze(context: Context): Promise<void> {
-    for await (const handler of this.handlers) {
+    for await (const handler of this.handlers.getAll()) {
       if (handler.supports(context.eventName)) {
         console.log('handler', handler, 'supports', context.eventName);
         console.log('calling with ', context.eventName, 'payload', context.payload);

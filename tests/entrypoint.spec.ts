@@ -1,14 +1,14 @@
 import 'reflect-metadata';
+
 import * as core from '@actions/core';
 
 jest.mock('@actions/core');
 
 describe('Test Entrypoint', () => {
-
-    afterEach(() => {
-        jest.resetAllMocks();
-        jest.resetModules();
-    });
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.resetModules();
+  });
 
   test('test entrypoint', async () => {
     await require('../src/entrypoint');
@@ -17,6 +17,4 @@ describe('Test Entrypoint', () => {
     const call = (core.setFailed as jest.Mock).mock.calls[0];
     expect(call[0]).toMatch('No Token provided');
   });
-
-
 });

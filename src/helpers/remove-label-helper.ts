@@ -25,6 +25,6 @@ export class RemoveLabelHelper {
     };
     console.log('call rest API with', params);
 
-    await this.octokit.issues.deleteLabel(params);
+    await this.octokit.issues.removeLabel(params);
   }
 }

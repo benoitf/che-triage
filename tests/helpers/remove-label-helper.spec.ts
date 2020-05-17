@@ -16,7 +16,7 @@ describe('Test Helper RemoveLabelHelper', () => {
   // check with label existing
   test('test call correct API', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const octokit: any = { issues: { deleteLabel: jest.fn() } };
+    const octokit: any = { issues: { removeLabel: jest.fn() } };
 
     container.bind(Octokit).toConstantValue(octokit);
     const removeLabelHelper = container.get(RemoveLabelHelper);
@@ -26,8 +26,8 @@ describe('Test Helper RemoveLabelHelper', () => {
 
     await removeLabelHelper.removeLabel(labelToRemove, issueInfo);
 
-    expect(octokit.issues.deleteLabel).toBeCalled();
-    const params: Octokit.IssuesRemoveLabelParams = octokit.issues.deleteLabel.mock.calls[0][0];
+    expect(octokit.issues.removeLabel).toBeCalled();
+    const params: Octokit.IssuesRemoveLabelParams = octokit.issues.removeLabel.mock.calls[0][0];
 
     expect(params.name).toBe(labelToRemove);
     expect(params.issue_number).toBe(issueInfo.number);
@@ -38,7 +38,7 @@ describe('Test Helper RemoveLabelHelper', () => {
   // check if label does not exist on the issue
   test('test skip call API', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const octokit: any = { issues: { deleteLabel: jest.fn() } };
+    const octokit: any = { issues: { removeLabel: jest.fn() } };
 
     container.bind(Octokit).toConstantValue(octokit);
     const removeLabelHelper = container.get(RemoveLabelHelper);
@@ -50,6 +50,6 @@ describe('Test Helper RemoveLabelHelper', () => {
 
     await removeLabelHelper.removeLabel(labelToRemove, issueInfo);
 
-    expect(octokit.issues.deleteLabel).toBeCalledTimes(0);
+    expect(octokit.issues.removeLabel).toBeCalledTimes(0);
   });
 });

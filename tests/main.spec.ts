@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+
 import * as core from '@actions/core';
 
 import { Main } from '../src/main';
@@ -6,13 +7,11 @@ import { Main } from '../src/main';
 jest.mock('@actions/core');
 
 describe('Test Main', () => {
-
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   test('test missing token', async () => {
-
     const main = new Main();
     await main.start();
     expect(core.setFailed).toBeCalled();
@@ -21,7 +20,7 @@ describe('Test Main', () => {
   });
 
   test('test with token', async () => {
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (core as any).__setInput(Main.WRITE_TOKEN, 'foo');
 
     jest.mock('../src/inversify-binding');
@@ -32,6 +31,4 @@ describe('Test Main', () => {
     const call = (core.setOutput as jest.Mock).mock.calls[0];
     expect(call[0]).toMatch('time');
   });
-
-
 });

@@ -3,10 +3,9 @@ import * as github from '@actions/github';
 
 import { Analysis } from './analysis';
 import { InversifyBinding } from './inversify-binding';
-import { RemoveLifeCycleStaleLogic } from './logic/remove-lifecycle-stale-logic';
 
 export class Main {
-    public static readonly WRITE_TOKEN: string = 'write-token';
+  public static readonly WRITE_TOKEN: string = 'write-token';
 
   protected async doStart(): Promise<void> {
     // github write token
@@ -17,10 +16,6 @@ export class Main {
 
     const inversifyBinbding = new InversifyBinding(writeToken);
     const container = inversifyBinbding.initBindings();
-
-    const removeLifecycleStateLogic = container.get(RemoveLifeCycleStaleLogic);
-
-    
     const analysis = container.get(Analysis);
     await analysis.analyze(github.context);
 

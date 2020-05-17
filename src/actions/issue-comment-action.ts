@@ -47,7 +47,6 @@ export class IssueCommentAction implements IssueCommentListener {
     console.log(`the command name is "${commandName}"`);
     console.log(`the command name is "${commandName}"`);
 
-
     const command = this.issueCommands.get(commandName);
     if (command) {
       console.log('command is found in issueCommands, executing...', this.issueCommands);

@@ -7,12 +7,14 @@ import { Container } from 'inversify';
 import { Handler } from '../../src/api/handler';
 import { IssueCommentHandler } from '../../src/handler/issue-comment-handler';
 import { IssueCommentListener } from '../../src/api/issue-comment-listener';
+import { bindMultiInjectProvider } from '../../src/api/multi-inject-provider';
 
 describe('Test Issue Comment Handler', () => {
   let container: Container;
 
   beforeEach(() => {
     container = new Container();
+    bindMultiInjectProvider(container, IssueCommentListener);
     container.bind(Handler).to(IssueCommentHandler).inSingletonScope();
   });
 
@@ -36,7 +38,7 @@ describe('Test Issue Comment Handler', () => {
     const issueCommentHandler: IssueCommentHandler = handler as IssueCommentHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'new-comment.json'));
     issueCommentHandler.handle('issue_comment', json);
-    expect(issueCommentHandler['issueCommentListeners']).toEqual([]);
+    expect(issueCommentHandler['issueCommentListeners'].getAll()).toEqual([]);
   });
 
   test('test call one listener', async () => {
@@ -64,7 +66,7 @@ describe('Test Issue Comment Handler', () => {
     issueCommentHandler.handle('issue_comment', json);
 
     // two listeners
-    expect(issueCommentHandler['issueCommentListeners'].length).toEqual(2);
+    expect(issueCommentHandler['issueCommentListeners'].getAll().length).toEqual(2);
 
     // each listener being invoked
     expect(listener.execute).toBeCalled();
