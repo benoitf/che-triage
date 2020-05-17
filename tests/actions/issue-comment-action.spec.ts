@@ -6,13 +6,24 @@ import * as path from 'path';
 import { Container } from 'inversify';
 import { IssueCommentAction } from '../../src/actions/issue-comment-action';
 import { IssueCommentInfo } from '../../src/info/issue-comment-info';
+import { AddReactionCommentHelper } from '../../src/helpers/add-reaction-comment-helper';
 
 describe('Test Action IssueCommentAction', () => {
   let container: Container;
 
+  const addReactionCommentHelper: AddReactionCommentHelper = {
+    addReaction: jest.fn(),
+  } as any;
+
+
   beforeEach(() => {
     container = new Container();
+    container.bind(AddReactionCommentHelper).toConstantValue(addReactionCommentHelper);
     container.bind(IssueCommentAction).toSelf().inSingletonScope();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   test('test not execute', async () => {
@@ -28,6 +39,8 @@ describe('Test Action IssueCommentAction', () => {
 
     await issueCommentAction.execute(json);
     expect(fooMock.dummyCall).toBeCalledTimes(0);
+    expect(addReactionCommentHelper.addReaction).toBeCalledTimes(0);
+    
   });
 
   // created comment should trigger action
@@ -53,6 +66,13 @@ describe('Test Action IssueCommentAction', () => {
     expect(issueCommentInfo.repo).toEqual('demo-gh-event');
     expect(issueCommentInfo.number).toEqual(1);
     expect(issueCommentInfo.owner).toEqual('benoitf');
+    expect(issueCommentInfo.commentId).toEqual(628762120);
+
+    expect(addReactionCommentHelper.addReaction).toHaveBeenCalled();
+    const call = (addReactionCommentHelper.addReaction as jest.Mock).mock.calls[0];
+    expect(call[0]).toEqual('+1');
+    expect(call[1]).toEqual(issueCommentInfo);
+
   });
 
   // edited comment should trigger action
@@ -78,6 +98,14 @@ describe('Test Action IssueCommentAction', () => {
     expect(issueCommentInfo.repo).toEqual('demo-gh-event');
     expect(issueCommentInfo.number).toEqual(1);
     expect(issueCommentInfo.owner).toEqual('benoitf');
+    expect(issueCommentInfo.commentId).toEqual(628762120);
+
+    expect(addReactionCommentHelper.addReaction).toHaveBeenCalled();
+    const call = (addReactionCommentHelper.addReaction as jest.Mock).mock.calls[0];
+    expect(call[0]).toEqual('+1');
+    expect(call[1]).toEqual(issueCommentInfo);
+
+
   });
 
   // deleted comment should not trigger action
@@ -99,5 +127,8 @@ describe('Test Action IssueCommentAction', () => {
     await issueCommentAction.execute(json);
     expect(fooMock.dummyCall).toHaveBeenCalledTimes(0);
     expect(issueCommentInfo).toBeUndefined();
+
+    expect(addReactionCommentHelper.addReaction).toBeCalledTimes(0);
+
   });
 });

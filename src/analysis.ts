@@ -13,8 +13,6 @@ export class Analysis {
   async analyze(context: Context): Promise<void> {
     for await (const handler of this.handlers.getAll()) {
       if (handler.supports(context.eventName)) {
-        console.log('handler', handler, 'supports', context.eventName);
-        console.log('calling with ', context.eventName, 'payload', context.payload);
         await handler.handle(context.eventName, context.payload);
       }
     }

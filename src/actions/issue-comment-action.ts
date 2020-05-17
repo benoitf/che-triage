@@ -2,11 +2,15 @@ import * as Webhooks from '@octokit/webhooks';
 
 import { IssueCommentInfo } from '../info/issue-comment-info';
 import { IssueCommentListener } from '../api/issue-comment-listener';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
+import { AddReactionCommentHelper } from '../helpers/add-reaction-comment-helper';
 
 @injectable()
 export class IssueCommentAction implements IssueCommentListener {
   private issueCommands: Map<string, (issueCommentInfo: IssueCommentInfo) => Promise<void>>;
+
+@inject(AddReactionCommentHelper)
+private addReactionCommentHelper: AddReactionCommentHelper;
 
   constructor() {
     this.issueCommands = new Map();
@@ -26,10 +30,8 @@ export class IssueCommentAction implements IssueCommentListener {
     // check if body is in one ot the commands
     const commentBody = payload.comment.body;
 
-    console.log('executing payload', payload);
     // only handle create and edit
     if (payload.action !== 'created' && payload.action !== 'edited') {
-      console.log('action not handled, was:', payload.action);
       return;
     }
 
@@ -41,18 +43,14 @@ export class IssueCommentAction implements IssueCommentListener {
       payload.issue.number,
       payload.repository.owner.login,
       payload.repository.name,
-      labels
+      labels,
+      payload.comment.id
     );
-
-    console.log(`the command name is "${commandName}"`);
-    console.log(`the command name is "${commandName}"`);
 
     const command = this.issueCommands.get(commandName);
     if (command) {
-      console.log('command is found in issueCommands, executing...', this.issueCommands);
+      this.addReactionCommentHelper.addReaction('+1', issueCommentInfo);
       await command(issueCommentInfo);
-    } else {
-      console.log('command is not found in all issueCommands', this.issueCommands);
     }
   }
 }

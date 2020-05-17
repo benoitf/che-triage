@@ -15,6 +15,6 @@ describe('Test Entrypoint', () => {
 
     expect(core.setFailed).toBeCalled();
     const call = (core.setFailed as jest.Mock).mock.calls[0];
-    expect(call[0]).toMatch('No Token provided');
+    expect(call[0]).toMatch('No Write Token provided');
   });
 });

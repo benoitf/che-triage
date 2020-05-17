@@ -19,11 +19,9 @@ export class RemoveLifeCycleStaleLogic implements Logic {
   // Remove the label if specified inside the comment
   @postConstruct()
   public setup(): void {
-    console.log('registering the command with name', RemoveLifeCycleStaleLogic.REMOVE_LIFECYCLE_STALE_COMMAND);
     this.issueCommentAction.registerIssueCommentCommand(
       RemoveLifeCycleStaleLogic.REMOVE_LIFECYCLE_STALE_COMMAND,
       async (issueInfo: IssueCommentInfo) => {
-        console.log('remove label for issueInfo', issueInfo);
         await this.removeLabelHelper.removeLabel(RemoveLifeCycleStaleLogic.LABEL_TO_REMOVE, issueInfo);
       }
     );

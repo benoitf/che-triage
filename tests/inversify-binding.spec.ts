@@ -12,8 +12,8 @@ import { RemoveLabelHelper } from '../src/helpers/remove-label-helper';
 import { RemoveLifeCycleStaleLogic } from '../src/logic/remove-lifecycle-stale-logic';
 
 describe('Test InversifyBinding', () => {
-  test('test acceptance (true)', async () => {
-    const inversifyBinding = new InversifyBinding('foo');
+  test('test bindings', async () => {
+    const inversifyBinding = new InversifyBinding('foo', 'bar');
     const container: Container = inversifyBinding.initBindings();
 
     expect(inversifyBinding).toBeDefined();

@@ -1,4 +1,5 @@
 export class IssueInfo {
+  
   constructor(
     private issueNumber: number,
     private ownerName: string,

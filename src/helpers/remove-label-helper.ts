@@ -12,7 +12,6 @@ export class RemoveLabelHelper {
   public async removeLabel(labelToRemove: string, issueInfo: IssueInfo): Promise<void> {
     // if issue has not the label, do not trigger the removal
     if (!issueInfo.hasLabel(labelToRemove)) {
-      console.log('not removing label as it is not present', labelToRemove);
       return;
     }
 
@@ -23,7 +22,6 @@ export class RemoveLabelHelper {
       owner: issueInfo.owner,
       repo: issueInfo.repo,
     };
-    console.log('call rest API with', params);
 
     await this.octokit.issues.removeLabel(params);
   }

@@ -12,11 +12,12 @@ import { RemoveLabelHelper } from './helpers/remove-label-helper';
 import { RemoveLifeCycleStaleLogic } from './logic/remove-lifecycle-stale-logic';
 import { bindMultiInjectProvider } from './api/multi-inject-provider';
 import { Logic } from './api/logic';
+import { AddReactionCommentHelper } from './helpers/add-reaction-comment-helper';
 
 export class InversifyBinding {
   private container: Container;
 
-  constructor(private writeToken: string) {}
+  constructor(private writeToken: string, private readToken: string) {}
 
   public initBindings(): Container {
     this.container = new Container();
@@ -31,7 +32,8 @@ export class InversifyBinding {
 
     // helper
     this.container.bind(RemoveLabelHelper).toSelf().inSingletonScope();
-
+    this.container.bind(AddReactionCommentHelper).toSelf().inSingletonScope();
+    
     // logic 
     this.container.bind(RemoveLifeCycleStaleLogic).toSelf().inSingletonScope();
     this.container.bind(Logic).toService(RemoveLifeCycleStaleLogic);
@@ -39,9 +41,11 @@ export class InversifyBinding {
         
     // token
     this.container.bind(OctokitBuilder).toSelf().inSingletonScope();
-
     const writeOctokit = this.container.get(OctokitBuilder).build(this.writeToken);
     this.container.bind(Octokit).toConstantValue(writeOctokit).whenTargetNamed('WRITE_TOKEN');
+
+    const readOctokit = this.container.get(OctokitBuilder).build(this.readToken);
+    this.container.bind(Octokit).toConstantValue(readOctokit).whenTargetNamed('READ_TOKEN');
 
     // handler
     this.container.bind(Handler).to(IssueCommentHandler).inSingletonScope();
