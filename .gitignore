@@ -1,0 +1,6 @@
+coverage
+.intellij
+.eclipse
+.vscode
+node_modules
+

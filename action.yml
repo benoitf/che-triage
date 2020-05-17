@@ -1,0 +1,12 @@
+name: 'Eclipse Che Bot'
+description: 'Handle all triage fo this repository'
+inputs:
+  write-token:  # GITHUB TOKEN
+    description: 'GITHUB token used to manage issues/pull requests'
+    required: true
+outputs:
+  time:
+    description: 'The time'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

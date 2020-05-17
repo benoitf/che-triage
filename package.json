@@ -1,0 +1,74 @@
+{
+  "name": "che-triage",
+  "version": "0.0.0",
+  "author": "Florent Benoit",
+  "description": "bot for che",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^2.2.0",
+    "@octokit/webhooks": "^7.5.0",
+    "fs-extra": "^9.0.0",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.1.0",
+    "@types/jest": "^25.2.2",
+    "@types/reflect-metadata": "^0.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@zeit/ncc": "^0.22.1",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.11.0",
+    "import-sort-style-eslint": "^6.0.0",
+    "jest": "^25.0.0",
+    "nexe": "3.3.2",
+    "prettier": "^2.0.5",
+    "prettier-plugin-import-sort": "^0.0.4",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "compile": "tsc --project .",
+    "format": "prettier --write **/*.ts **/**/*.ts",
+    "format-check": "prettier --check **/*.ts **/**/*.ts",
+    "lint": "eslint . --ext .ts",
+    "pack": "ncc build",
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coverageDirectory": "./coverage",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ]
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true
+  },
+  "importSort": {
+    ".ts": {
+      "style": "eslint",
+      "parser": "typescript"
+    }
+  }
+}
