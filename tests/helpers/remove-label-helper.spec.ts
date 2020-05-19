@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 
+import { IssueInfo, IssueInfoBuilder } from '../../src/info/issue-info';
+
 import { Container } from 'inversify';
-import { IssueInfo } from '../../src/info/issue-info';
 import { Octokit } from '@octokit/rest';
 import { RemoveLabelHelper } from '../../src/helpers/remove-label-helper';
 
@@ -11,6 +12,7 @@ describe('Test Helper RemoveLabelHelper', () => {
   beforeEach(() => {
     container = new Container();
     container.bind(RemoveLabelHelper).toSelf().inSingletonScope();
+    container.bind(IssueInfoBuilder).toSelf().inSingletonScope();
   });
 
   // check with label existing
@@ -22,7 +24,13 @@ describe('Test Helper RemoveLabelHelper', () => {
     const removeLabelHelper = container.get(RemoveLabelHelper);
 
     const labelToRemove = 'foo';
-    const issueInfo: IssueInfo = new IssueInfo(123, 'my-owner', 'repository', [labelToRemove]);
+    const issueInfo: IssueInfo = container
+      .get(IssueInfoBuilder)
+      .build()
+      .withOwner('my-owner')
+      .withRepo('repository')
+      .withLabels([labelToRemove])
+      .withNumber(123);
 
     await removeLabelHelper.removeLabel(labelToRemove, issueInfo);
 
@@ -46,7 +54,13 @@ describe('Test Helper RemoveLabelHelper', () => {
     const labelToRemove = 'baz';
 
     // issue has not the label to remove
-    const issueInfo: IssueInfo = new IssueInfo(123, 'my-owner', 'repository', ['foo', 'bar']);
+    const issueInfo: IssueInfo = container
+      .get(IssueInfoBuilder)
+      .build()
+      .withOwner('my-owner')
+      .withRepo('repository')
+      .withLabels(['foo', 'bar'])
+      .withNumber(123);
 
     await removeLabelHelper.removeLabel(labelToRemove, issueInfo);
 

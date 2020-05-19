@@ -14,6 +14,7 @@ describe('Test Issue Comment Handler', () => {
 
   beforeEach(() => {
     container = new Container();
+    bindMultiInjectProvider(container, Handler);
     bindMultiInjectProvider(container, IssueCommentListener);
     container.bind(Handler).to(IssueCommentHandler).inSingletonScope();
   });

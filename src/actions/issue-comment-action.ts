@@ -1,16 +1,20 @@
 import * as Webhooks from '@octokit/webhooks';
 
-import { IssueCommentInfo } from '../info/issue-comment-info';
-import { IssueCommentListener } from '../api/issue-comment-listener';
-import { injectable, inject } from 'inversify';
+import { IssueCommentInfo, IssueCommentInfoBuilder } from '../info/issue-comment-info';
+import { inject, injectable } from 'inversify';
+
 import { AddReactionCommentHelper } from '../helpers/add-reaction-comment-helper';
+import { IssueCommentListener } from '../api/issue-comment-listener';
 
 @injectable()
 export class IssueCommentAction implements IssueCommentListener {
   private issueCommands: Map<string, (issueCommentInfo: IssueCommentInfo) => Promise<void>>;
 
-@inject(AddReactionCommentHelper)
-private addReactionCommentHelper: AddReactionCommentHelper;
+  @inject(IssueCommentInfoBuilder)
+  private issueCommentInfoBuilder: IssueCommentInfoBuilder;
+
+  @inject(AddReactionCommentHelper)
+  private addReactionCommentHelper: AddReactionCommentHelper;
 
   constructor() {
     this.issueCommands = new Map();
@@ -37,18 +41,13 @@ private addReactionCommentHelper: AddReactionCommentHelper;
 
     const commandName = commentBody.trim();
 
-    const labels: string[] = payload.issue.labels.map((label) => label.name);
-
-    const issueCommentInfo = new IssueCommentInfo(
-      payload.issue.number,
-      payload.repository.owner.login,
-      payload.repository.name,
-      labels,
-      payload.comment.id
-    );
-
     const command = this.issueCommands.get(commandName);
     if (command) {
+      const issueCommentInfo = this.issueCommentInfoBuilder
+        .build()
+        .withPayLoadIssues(payload)
+        .withCommentId(payload.comment.id);
+
       this.addReactionCommentHelper.addReaction('+1', issueCommentInfo);
       await command(issueCommentInfo);
     }

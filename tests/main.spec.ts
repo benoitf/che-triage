@@ -30,7 +30,6 @@ describe('Test Main', () => {
     expect(call[0]).toMatch('No Read Token provided');
   });
 
-
   test('test with token', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (core as any).__setInput(Main.WRITE_TOKEN, 'foo');

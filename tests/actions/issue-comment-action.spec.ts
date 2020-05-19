@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
+import { IssueCommentInfo, IssueCommentInfoBuilder } from '../../src/info/issue-comment-info';
+
+import { AddReactionCommentHelper } from '../../src/helpers/add-reaction-comment-helper';
 import { Container } from 'inversify';
 import { IssueCommentAction } from '../../src/actions/issue-comment-action';
-import { IssueCommentInfo } from '../../src/info/issue-comment-info';
-import { AddReactionCommentHelper } from '../../src/helpers/add-reaction-comment-helper';
 
 describe('Test Action IssueCommentAction', () => {
   let container: Container;
@@ -15,11 +17,11 @@ describe('Test Action IssueCommentAction', () => {
     addReaction: jest.fn(),
   } as any;
 
-
   beforeEach(() => {
     container = new Container();
     container.bind(AddReactionCommentHelper).toConstantValue(addReactionCommentHelper);
     container.bind(IssueCommentAction).toSelf().inSingletonScope();
+    container.bind(IssueCommentInfoBuilder).toSelf().inSingletonScope();
   });
 
   afterEach(() => {
@@ -31,7 +33,6 @@ describe('Test Action IssueCommentAction', () => {
 
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'new-comment.json'));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fooMock: any = { dummyCall: jest.fn() };
     issueCommentAction.registerIssueCommentCommand('/foo', async () => {
       fooMock.dummyCall();
@@ -40,7 +41,6 @@ describe('Test Action IssueCommentAction', () => {
     await issueCommentAction.execute(json);
     expect(fooMock.dummyCall).toBeCalledTimes(0);
     expect(addReactionCommentHelper.addReaction).toBeCalledTimes(0);
-    
   });
 
   // created comment should trigger action
@@ -51,9 +51,7 @@ describe('Test Action IssueCommentAction', () => {
       path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'remove-lifecycle-stale.json')
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fooMock: any = { dummyCall: jest.fn() };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let issueCommentInfo: IssueCommentInfo = jest.fn() as any;
     issueCommentAction.registerIssueCommentCommand('/remove-lifecycle stale', async (issueInfo: IssueCommentInfo) => {
       fooMock.dummyCall();
@@ -72,7 +70,6 @@ describe('Test Action IssueCommentAction', () => {
     const call = (addReactionCommentHelper.addReaction as jest.Mock).mock.calls[0];
     expect(call[0]).toEqual('+1');
     expect(call[1]).toEqual(issueCommentInfo);
-
   });
 
   // edited comment should trigger action
@@ -83,9 +80,7 @@ describe('Test Action IssueCommentAction', () => {
       path.join(__dirname, '..', '_data', 'issue_comment', 'edited', 'remove-lifecycle-stale.json')
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fooMock: any = { dummyCall: jest.fn() };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let issueCommentInfo: IssueCommentInfo = jest.fn() as any;
     issueCommentAction.registerIssueCommentCommand('/remove-lifecycle stale', async (issueInfo: IssueCommentInfo) => {
       fooMock.dummyCall();
@@ -104,8 +99,6 @@ describe('Test Action IssueCommentAction', () => {
     const call = (addReactionCommentHelper.addReaction as jest.Mock).mock.calls[0];
     expect(call[0]).toEqual('+1');
     expect(call[1]).toEqual(issueCommentInfo);
-
-
   });
 
   // deleted comment should not trigger action
@@ -116,7 +109,6 @@ describe('Test Action IssueCommentAction', () => {
       path.join(__dirname, '..', '_data', 'issue_comment', 'deleted', 'remove-lifecycle-stale.json')
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fooMock: any = { dummyCall: jest.fn() };
     let issueCommentInfo: IssueCommentInfo | undefined = undefined;
     issueCommentAction.registerIssueCommentCommand('/remove-lifecycle stale', async (issueInfo: IssueCommentInfo) => {
@@ -129,6 +121,5 @@ describe('Test Action IssueCommentAction', () => {
     expect(issueCommentInfo).toBeUndefined();
 
     expect(addReactionCommentHelper.addReaction).toBeCalledTimes(0);
-
   });
 });

@@ -1,25 +1,82 @@
+import { injectable } from 'inversify';
+import Webhooks = require('@octokit/webhooks');
+
 export class IssueInfo {
-  
-  constructor(
-    private issueNumber: number,
-    private ownerName: string,
-    private repository: string,
-    private labels: string[]
-  ) {}
+  private __repository: string;
+  private __owner: string;
+  private __number: number;
+  private __labels: string[];
+  private __htmlLink: string;
+  private __author: string;
+
+  public withPayLoadIssues(payload: Webhooks.WebhookPayloadIssues): this {
+    const labels: string[] = payload.issue.labels.map((label) => label.name);
+    return this.withNumber(payload.issue.number)
+      .withAuthor(payload.issue.user.login)
+      .withHtmlLink(payload.issue.html_url)
+      .withOwner(payload.repository.owner.login)
+      .withRepo(payload.repository.name)
+      .withLabels(labels);
+  }
+
+  public withAuthor(author: string): this {
+    this.__author = author;
+    return this;
+  }
+
+  public withHtmlLink(htmlLink: string): this {
+    this.__htmlLink = htmlLink;
+    return this;
+  }
+
+  public withRepo(repository: string): this {
+    this.__repository = repository;
+    return this;
+  }
+
+  public withLabels(labels: string[]): this {
+    this.__labels = labels;
+    return this;
+  }
+
+  public withOwner(owner: string): this {
+    this.__owner = owner;
+    return this;
+  }
+
+  public withNumber(number: number): this {
+    this.__number = number;
+    return this;
+  }
+
+  public get author(): string {
+    return this.__author;
+  }
 
   public get repo(): string {
-    return this.repository;
+    return this.__repository;
   }
 
   public get owner(): string {
-    return this.ownerName;
+    return this.__owner;
   }
 
   public get number(): number {
-    return this.issueNumber;
+    return this.__number;
+  }
+
+  public get htmlLink(): string {
+    return this.__htmlLink;
   }
 
   public hasLabel(labelName: string): boolean {
-    return this.labels.includes(labelName);
+    return this.__labels.includes(labelName);
+  }
+}
+
+@injectable()
+export class IssueInfoBuilder {
+  build(): IssueInfo {
+    return new IssueInfo();
   }
 }

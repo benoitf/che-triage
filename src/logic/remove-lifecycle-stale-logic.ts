@@ -2,8 +2,8 @@ import { inject, injectable, postConstruct } from 'inversify';
 
 import { IssueCommentAction } from '../actions/issue-comment-action';
 import { IssueCommentInfo } from '../info/issue-comment-info';
-import { RemoveLabelHelper } from '../helpers/remove-label-helper';
 import { Logic } from '../api/logic';
+import { RemoveLabelHelper } from '../helpers/remove-label-helper';
 
 @injectable()
 export class RemoveLifeCycleStaleLogic implements Logic {
@@ -22,6 +22,7 @@ export class RemoveLifeCycleStaleLogic implements Logic {
     this.issueCommentAction.registerIssueCommentCommand(
       RemoveLifeCycleStaleLogic.REMOVE_LIFECYCLE_STALE_COMMAND,
       async (issueInfo: IssueCommentInfo) => {
+        console.info(`Remove label ${RemoveLifeCycleStaleLogic.LABEL_TO_REMOVE} on issue ${issueInfo.htmlLink}`);
         await this.removeLabelHelper.removeLabel(RemoveLifeCycleStaleLogic.LABEL_TO_REMOVE, issueInfo);
       }
     );

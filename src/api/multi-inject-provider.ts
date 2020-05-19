@@ -27,8 +27,14 @@ class DefaultMultiInjectProvider<T extends object> implements MultiInjectProvide
 
 export type Bindable = interfaces.Bind | interfaces.Container;
 
-export function bindMultiInjectProvider(container: Container, id: symbol): void {
-  const bindingToSyntax = container.bind(MultiInjectProvider);
+export function bindMultiInjectProvider(bindable: Bindable, id: symbol): void {
+  const isContainer = typeof bindable !== 'function' && ('guid' in bindable || 'parent' in bindable);
+  let bindingToSyntax;
+  if (isContainer) {
+    bindingToSyntax = (bindable as Container).bind(MultiInjectProvider);
+  } else {
+    bindingToSyntax = (bindable as interfaces.Bind)(MultiInjectProvider);
+  }
   bindingToSyntax
     .toDynamicValue((ctx) => new DefaultMultiInjectProvider(id, ctx.container))
     .inSingletonScope()
