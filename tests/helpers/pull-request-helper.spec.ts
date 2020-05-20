@@ -17,7 +17,7 @@ describe('Test Helper PullRequestHelper', () => {
   });
 
   test('test with firstTime true', async () => {
-    const octokit: any = { search: { issues: jest.fn() } };
+    const octokit: any = { search: { issuesAndPullRequests: jest.fn() } };
 
     container.bind(Octokit).toConstantValue(octokit);
     const prHelper = container.get(PullRequestHelper);
@@ -32,11 +32,11 @@ describe('Test Helper PullRequestHelper', () => {
 
     // eslint-disable-next-line @typescript-eslint/camelcase
     const response: any = { data: { total_count: 0 } };
-    (octokit.search.issues as jest.Mock).mockReturnValue(response);
+    (octokit.search.issuesAndPullRequests as jest.Mock).mockReturnValue(response);
     const isFirstTime: boolean = await prHelper.isFirstTimeContributor(prInfo);
 
-    expect(octokit.search.issues).toBeCalled();
-    const params: Octokit.SearchIssuesParams = octokit.search.issues.mock.calls[0][0];
+    expect(octokit.search.issuesAndPullRequests).toBeCalled();
+    const params: Octokit.SearchIssuesAndPullRequestsParams = octokit.search.issuesAndPullRequests.mock.calls[0][0];
 
     expect(params.q).toBe(`repo:${prInfo.owner}/${prInfo.repo} type:pr author:${prInfo.author}`);
     expect(params.per_page).toBe(1);
@@ -45,7 +45,7 @@ describe('Test Helper PullRequestHelper', () => {
   });
 
   test('test with firstTime false', async () => {
-    const octokit: any = { search: { issues: jest.fn() } };
+    const octokit: any = { search: { issuesAndPullRequests: jest.fn() } };
 
     container.bind(Octokit).toConstantValue(octokit);
     const prHelper = container.get(PullRequestHelper);
@@ -61,11 +61,11 @@ describe('Test Helper PullRequestHelper', () => {
     // response with count = 10, not a first time user
     // eslint-disable-next-line @typescript-eslint/camelcase
     const response: any = { data: { total_count: 10 } };
-    (octokit.search.issues as jest.Mock).mockReturnValue(response);
+    (octokit.search.issuesAndPullRequests as jest.Mock).mockReturnValue(response);
     const isFirstTime: boolean = await prHelper.isFirstTimeContributor(prInfo);
 
-    expect(octokit.search.issues).toBeCalled();
-    const params: Octokit.SearchIssuesParams = octokit.search.issues.mock.calls[0][0];
+    expect(octokit.search.issuesAndPullRequests).toBeCalled();
+    const params: Octokit.SearchIssuesAndPullRequestsParams = octokit.search.issuesAndPullRequests.mock.calls[0][0];
 
     expect(params.q).toBe(`repo:${prInfo.owner}/${prInfo.repo} type:pr author:${prInfo.author}`);
     expect(params.per_page).toBe(1);

@@ -31,6 +31,7 @@ import { PullRequestInfoBuilder } from '../src/info/pull-request-info';
 import { PullRequestListener } from '../src/api/pull-request-listener';
 import { RemoveLabelHelper } from '../src/helpers/remove-label-helper';
 import { RemoveLifeCycleStaleLogic } from '../src/logic/remove-lifecycle-stale-logic';
+import { TemplateReader } from '../src/template/template-reader';
 
 describe('Test InversifyBinding', () => {
   test('test bindings', async () => {
@@ -81,6 +82,10 @@ describe('Test InversifyBinding', () => {
     expect(container.get(IssueCommentInfoBuilder)).toBeDefined();
     expect(container.get(PullRequestInfoBuilder)).toBeDefined();
 
+    // fetcher
+    expect(container.get(TemplateReader)).toBeDefined();
+
+    // logic
     const logics: Logic[] = container.getAll(Logic);
     expect(logics).toBeDefined();
     expect(logics.find((logic) => logic.constructor.name === AddCheMilestoneOnMergedPRLogic.name)).toBeTruthy();
