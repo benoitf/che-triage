@@ -5,9 +5,9 @@ import { AddCommentHelper } from '../../src/helpers/add-comment-helper';
 import { AddWelcomeFirstIssueLogic } from '../../src/logic/add-welcome-first-issue';
 import { Container } from 'inversify';
 import { IssueAction } from '../../src/actions/issue-action';
+import { IssueInfo } from '../../src/info/issue-info';
 import { IssuesHelper } from '../../src/helpers/issue-helper';
 import { TemplateReader } from '../../src/template/template-reader';
-import { IssueInfo } from '../../src/info/issue-info';
 
 describe('Test Logic AddWelcomeFirstIssue', () => {
   let container: Container;
@@ -61,7 +61,7 @@ describe('Test Logic AddWelcomeFirstIssue', () => {
     expect(issueAction.registerCallback).toBeCalled();
     const registerCallbackCall = (issueAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstIssueLogic.ISSUE_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstIssueLogic.ISSUE_EVENT]);
     const callback = registerCallbackCall[1];
 
     const issueInfo: IssueInfo = jest.fn() as any;
@@ -99,7 +99,7 @@ describe('Test Logic AddWelcomeFirstIssue', () => {
     expect(issueAction.registerCallback).toBeCalled();
     const registerCallbackCall = (issueAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstIssueLogic.ISSUE_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstIssueLogic.ISSUE_EVENT]);
     const callback = registerCallbackCall[1];
 
     const issueInfo: IssueInfo = jest.fn() as any;
@@ -115,7 +115,6 @@ describe('Test Logic AddWelcomeFirstIssue', () => {
     expect(addCommentHelper.addComment).toBeCalledTimes(0);
     expect(templateReader.render).toBeCalledTimes(0);
   });
-
 
   test('test not First Time but has label to test', async () => {
     const addWelcomeFirstIssueLogic = container.get(AddWelcomeFirstIssueLogic);
@@ -133,7 +132,7 @@ describe('Test Logic AddWelcomeFirstIssue', () => {
     expect(issueAction.registerCallback).toBeCalled();
     const registerCallbackCall = (issueAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstIssueLogic.ISSUE_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstIssueLogic.ISSUE_EVENT]);
     const callback = registerCallbackCall[1];
 
     const issueInfo: IssueInfo = jest.fn() as any;

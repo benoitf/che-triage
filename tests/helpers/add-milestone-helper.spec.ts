@@ -4,14 +4,26 @@ import { PullRequestInfo, PullRequestInfoBuilder } from '../../src/info/pull-req
 
 import { AddMilestoneHelper } from '../../src/helpers/add-milestone-helper';
 import { Container } from 'inversify';
+import { IssuesHelper } from '../../src/helpers/issue-helper';
 import { Octokit } from '@octokit/rest';
+import { PullRequestInfoLinkedIssuesExtractor } from '../../src/info/pull-request-info-linked-issues-extractor';
 
 describe('Test Helper AddMilestoneHelper', () => {
   let container: Container;
 
+  let pullRequestInfoLinkedIssuesExtractor: PullRequestInfoLinkedIssuesExtractor;
+  let issuesHelper: IssuesHelper;
+
   beforeEach(() => {
     container = new Container();
     container.bind(AddMilestoneHelper).toSelf().inSingletonScope();
+
+    pullRequestInfoLinkedIssuesExtractor = {} as any;
+    container.bind(PullRequestInfoLinkedIssuesExtractor).toConstantValue(pullRequestInfoLinkedIssuesExtractor);
+
+    issuesHelper = {} as any;
+    container.bind(IssuesHelper).toConstantValue(issuesHelper);
+
     container.bind(PullRequestInfoBuilder).toSelf().inSingletonScope();
   });
 

@@ -27,27 +27,26 @@ export class AddWelcomeFirstPRLogic implements Logic {
   // Add the given milestone
   @postConstruct()
   public setup(): void {
-    this.pullRequestAction.registerCallback(
-      AddWelcomeFirstPRLogic.PR_EVENT,
-      async (pullRequestInfo: PullRequestInfo) => {
-        // check if the author of this PR has already opened others
-        const firstTimeContributor: boolean = await this.pullRequestHelper.isFirstTimeContributor(pullRequestInfo);
+    const callback = async (pullRequestInfo: PullRequestInfo): Promise<void> => {
+      // check if the author of this PR has already opened others
+      const firstTimeContributor: boolean = await this.pullRequestHelper.isFirstTimeContributor(pullRequestInfo);
 
-        // check also if label 'first-time' is applied to be able to quickly test without being really a contributor
-        if (!firstTimeContributor && !pullRequestInfo.hasLabel(AddWelcomeFirstPRLogic.TEST_LABEL)) {
-          return;
-        }
-
-        const vars = {
-          AUTHOR: pullRequestInfo.author,
-          FIRST_TIME: firstTimeContributor,
-        };
-
-        const text = await this.templateReader.render('welcome-first-pr', vars);
-
-        // send the welcome message
-        await this.addCommentHelper.addComment(text, pullRequestInfo);
+      // check also if label 'first-time' is applied to be able to quickly test without being really a contributor
+      if (!firstTimeContributor && !pullRequestInfo.hasLabel(AddWelcomeFirstPRLogic.TEST_LABEL)) {
+        return;
       }
-    );
+
+      const vars = {
+        AUTHOR: pullRequestInfo.author,
+        FIRST_TIME: firstTimeContributor,
+      };
+
+      const text = await this.templateReader.render('welcome-first-pr', vars);
+
+      // send the welcome message
+      await this.addCommentHelper.addComment(text, pullRequestInfo);
+    };
+
+    this.pullRequestAction.registerCallback([AddWelcomeFirstPRLogic.PR_EVENT], callback);
   }
 }

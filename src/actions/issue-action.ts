@@ -19,12 +19,14 @@ export class IssueAction implements IssueListener {
   /**
    * Add the callback provided by given event name
    */
-  registerCallback(eventName: string, callback: (issueInfo: IssueInfo) => Promise<void>): void {
-    if (!this.issueCallbacks.has(eventName)) {
-      this.issueCallbacks.set(eventName, []);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.issueCallbacks.get(eventName)!.push(callback);
+  registerCallback(events: string[], callback: (issueInfo: IssueInfo) => Promise<void>): void {
+    events.forEach((eventName) => {
+      if (!this.issueCallbacks.has(eventName)) {
+        this.issueCallbacks.set(eventName, []);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.issueCallbacks.get(eventName)!.push(callback);
+    });
   }
 
   async execute(payload: Webhooks.WebhookPayloadIssues): Promise<void> {

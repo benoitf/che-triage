@@ -22,25 +22,24 @@ export class AddCheMilestoneOnMergedPRLogic implements Logic {
   // Add the given milestone
   @postConstruct()
   public setup(): void {
-    this.pullRequestAction.registerCallback(
-      AddCheMilestoneOnMergedPRLogic.PR_EVENT,
-      async (pullRequestInfo: PullRequestInfo) => {
-        // skip if not merged
-        if (!pullRequestInfo.merged) {
-          return;
-        }
-
-        // skip if not for master branch
-        if (!(pullRequestInfo.mergingBranch === 'master')) {
-          return;
-        }
-
-        const version: undefined | string = await this.cheVersionFetcher.getVersion();
-        if (version) {
-          console.info(`Add milestone ${version} on pull request ${pullRequestInfo.htmlLink}`);
-          await this.addMilestoneHelper.setMilestone(version, pullRequestInfo);
-        }
+    const callback = async (pullRequestInfo: PullRequestInfo): Promise<void> => {
+      // skip if not merged
+      if (!pullRequestInfo.merged) {
+        return;
       }
-    );
+
+      // skip if not for master branch
+      if (!(pullRequestInfo.mergingBranch === 'master')) {
+        return;
+      }
+
+      const version: undefined | string = await this.cheVersionFetcher.getVersion();
+      if (version) {
+        console.info(`Add milestone ${version} on pull request ${pullRequestInfo.htmlLink}`);
+        await this.addMilestoneHelper.setMilestone(version, pullRequestInfo);
+      }
+    };
+
+    this.pullRequestAction.registerCallback([AddCheMilestoneOnMergedPRLogic.PR_EVENT], callback);
   }
 }

@@ -1,6 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 
 import { AddCheMilestoneOnMergedPRLogic } from './add-che-milestone-on-merged-pr-logic';
+import { AddKindFromLinkedIssuesLogic } from './add-kind-from-linked-issue';
 import { AddStatusTriageLogic } from './add-status-triage';
 import { AddWelcomeFirstIssueLogic } from './add-welcome-first-issue';
 import { AddWelcomeFirstPRLogic } from './add-welcome-first-pr';
@@ -15,6 +16,7 @@ const logicModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(Logic).to(AddWelcomeFirstIssueLogic).inSingletonScope();
   bind(Logic).to(AddWelcomeFirstPRLogic).inSingletonScope();
   bind(Logic).to(RemoveLifeCycleStaleLogic).inSingletonScope();
+  bind(Logic).to(AddKindFromLinkedIssuesLogic).inSingletonScope();
 });
 
 export { logicModule };

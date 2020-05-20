@@ -10,9 +10,13 @@ import { Octokit } from '@octokit/rest';
 
 describe('Test Helper IssueHelper', () => {
   let container: Container;
+  let issueInfoBuilder: IssueInfoBuilder;
 
   beforeEach(() => {
     container = new Container();
+    issueInfoBuilder = {} as any;
+    container.bind(IssueInfoBuilder).toConstantValue(issueInfoBuilder);
+
     container.bind(IssuesHelper).toSelf().inSingletonScope();
   });
 

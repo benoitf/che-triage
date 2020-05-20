@@ -31,7 +31,7 @@ describe('Test Action IssueAction', () => {
     let receivedIssueInfo: IssueInfo | undefined = undefined;
 
     const fooMock: any = { dummyCall: jest.fn() };
-    issueAction.registerCallback('unknown-event', async (issueInfo: IssueInfo) => {
+    issueAction.registerCallback(['unknown-event'], async (issueInfo: IssueInfo) => {
       fooMock.dummyCall();
       receivedIssueInfo = issueInfo;
     });
@@ -49,7 +49,7 @@ describe('Test Action IssueAction', () => {
 
     let receivedIssueInfo: IssueInfo = jest.fn() as any;
     const fooMock: any = { dummyCall: jest.fn() };
-    await issueAction.registerCallback('opened', async (issueInfo: IssueInfo) => {
+    await issueAction.registerCallback(['opened'], async (issueInfo: IssueInfo) => {
       fooMock.dummyCall();
       receivedIssueInfo = issueInfo;
     });

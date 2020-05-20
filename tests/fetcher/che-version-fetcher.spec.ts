@@ -18,9 +18,10 @@ describe('Test CheVersionFetcher', () => {
 
   test('test get version', async () => {
     // mock got
-    const xml = await (
-      await fs.readFile(path.join(__dirname, '..', '_data', 'fetcher', 'che-version-fetcher-pom.xml'))
-    ).toString();
+    const xml = await fs.readFile(
+      path.join(__dirname, '..', '_data', 'fetcher', 'che-version-fetcher-pom.xml'),
+      'utf8'
+    );
     jest.mock('axios');
     (axios as any).__setContent(CheVersionFetcher.CHE_POM_XML, xml);
 

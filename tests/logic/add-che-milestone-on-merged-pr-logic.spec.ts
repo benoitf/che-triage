@@ -48,7 +48,7 @@ describe('Test Logic AddChe', () => {
 
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddCheMilestoneOnMergedPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddCheMilestoneOnMergedPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = { merged: false } as any;
@@ -74,7 +74,7 @@ describe('Test Logic AddChe', () => {
 
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddCheMilestoneOnMergedPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddCheMilestoneOnMergedPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = { merged: true, mergingBranch: 'master' } as any;
@@ -104,7 +104,7 @@ describe('Test Logic AddChe', () => {
 
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddCheMilestoneOnMergedPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddCheMilestoneOnMergedPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = { merged: true, mergingBranch: 'master' } as any;
@@ -130,7 +130,7 @@ describe('Test Logic AddChe', () => {
 
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddCheMilestoneOnMergedPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddCheMilestoneOnMergedPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = { merged: true, mergingBranch: 'foo' } as any;

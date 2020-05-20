@@ -18,7 +18,7 @@ export class AddStatusTriageLogic implements Logic {
   // Remove the label if specified inside the comment
   @postConstruct()
   public setup(): void {
-    this.issueAction.registerCallback('opened', async (issueInfo: IssueInfo) => {
+    this.issueAction.registerCallback(['opened'], async (issueInfo: IssueInfo) => {
       await this.addLabelHelper.addLabel([AddStatusTriageLogic.LABEL_TO_ADD], issueInfo);
       console.info(`Add label ${AddStatusTriageLogic.LABEL_TO_ADD} on issue ${issueInfo.htmlLink}`);
     });

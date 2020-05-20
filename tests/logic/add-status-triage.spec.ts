@@ -41,7 +41,7 @@ describe('Test Logic AddStatusTriage', () => {
     expect(issueAction.registerCallback).toBeCalled();
     const registerCallbackCall = (issueAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const issueInfo: IssueInfo = jest.fn() as any;

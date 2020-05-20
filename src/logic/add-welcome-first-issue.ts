@@ -27,7 +27,7 @@ export class AddWelcomeFirstIssueLogic implements Logic {
   // Add the given milestone
   @postConstruct()
   public setup(): void {
-    this.issueAction.registerCallback(AddWelcomeFirstIssueLogic.ISSUE_EVENT, async (issueInfo: IssueInfo) => {
+    this.issueAction.registerCallback([AddWelcomeFirstIssueLogic.ISSUE_EVENT], async (issueInfo: IssueInfo) => {
       // check if the author of this issue has already reported issues (including PRs)
       const firstTime: boolean = await this.issueHelper.isFirstTime(issueInfo);
       if (!firstTime && !issueInfo.hasLabel(AddWelcomeFirstIssueLogic.TEST_LABEL)) {

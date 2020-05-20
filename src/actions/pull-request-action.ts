@@ -19,12 +19,14 @@ export class PullRequestAction implements PullRequestListener {
   /**
    * Add the callback provided by given action name
    */
-  registerCallback(actionName: string, callback: (pullRequest: PullRequestInfo) => Promise<void>): void {
-    if (!this.pulllRequesCallbacks.has(actionName)) {
-      this.pulllRequesCallbacks.set(actionName, []);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.pulllRequesCallbacks.get(actionName)!.push(callback);
+  registerCallback(events: string[], callback: (pullRequest: PullRequestInfo) => Promise<void>): void {
+    events.forEach((eventName) => {
+      if (!this.pulllRequesCallbacks.has(eventName)) {
+        this.pulllRequesCallbacks.set(eventName, []);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.pulllRequesCallbacks.get(eventName)!.push(callback);
+    });
   }
 
   async execute(payload: Webhooks.WebhookPayloadPullRequest): Promise<void> {
@@ -33,8 +35,10 @@ export class PullRequestAction implements PullRequestListener {
     const callbacks = this.pulllRequesCallbacks.get(eventName);
     if (callbacks) {
       const labels: string[] = payload.pull_request.labels.map((label) => label.name);
-      const issue = this.pullRequestInfoBuilder
+
+      const pullRequestInfo = this.pullRequestInfoBuilder
         .build()
+        .withBody(payload.pull_request.body)
         .withNumber(payload.pull_request.number)
         .withOwner(payload.repository.owner.login)
         .withRepo(payload.repository.name)
@@ -44,8 +48,10 @@ export class PullRequestAction implements PullRequestListener {
         .withMergingBranch(payload.pull_request.base.ref)
         .withMergedState(payload.pull_request.merged);
 
+      await this.pullRequestInfoBuilder.resolve(pullRequestInfo);
+
       for await (const callback of callbacks) {
-        callback(issue);
+        callback(pullRequestInfo);
       }
     }
   }

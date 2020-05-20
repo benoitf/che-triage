@@ -8,6 +8,7 @@ export class IssueInfo {
   private __labels: string[];
   private __htmlLink: string;
   private __author: string;
+  private __body: string;
 
   public withPayLoadIssues(payload: Webhooks.WebhookPayloadIssues): this {
     const labels: string[] = payload.issue.labels.map((label) => label.name);
@@ -16,7 +17,13 @@ export class IssueInfo {
       .withHtmlLink(payload.issue.html_url)
       .withOwner(payload.repository.owner.login)
       .withRepo(payload.repository.name)
+      .withBody(payload.issue.body)
       .withLabels(labels);
+  }
+
+  public withBody(body: string): this {
+    this.__body = body;
+    return this;
   }
 
   public withAuthor(author: string): this {
@@ -49,6 +56,10 @@ export class IssueInfo {
     return this;
   }
 
+  public get body(): string {
+    return this.__body;
+  }
+
   public get author(): string {
     return this.__author;
   }
@@ -63,6 +74,10 @@ export class IssueInfo {
 
   public get number(): number {
     return this.__number;
+  }
+
+  public get labels(): string[] {
+    return this.__labels;
   }
 
   public get htmlLink(): string {

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import { AddCheMilestoneOnMergedPRLogic } from '../src/logic/add-che-milestone-on-merged-pr-logic';
 import { AddCommentHelper } from '../src/helpers/add-comment-helper';
+import { AddKindFromLinkedIssuesLogic } from '../src/logic/add-kind-from-linked-issue';
 import { AddLabelHelper } from '../src/helpers/add-label-helper';
 import { AddMilestoneHelper } from '../src/helpers/add-milestone-helper';
 import { AddReactionCommentHelper } from '../src/helpers/add-reaction-comment-helper';
@@ -93,6 +94,7 @@ describe('Test InversifyBinding', () => {
     expect(logics.find((logic) => logic.constructor.name === AddWelcomeFirstIssueLogic.name)).toBeTruthy();
     expect(logics.find((logic) => logic.constructor.name === AddWelcomeFirstPRLogic.name)).toBeTruthy();
     expect(logics.find((logic) => logic.constructor.name === RemoveLifeCycleStaleLogic.name)).toBeTruthy();
+    expect(logics.find((logic) => logic.constructor.name === AddKindFromLinkedIssuesLogic.name)).toBeTruthy();
 
     const octokitBuilder = container.get(OctokitBuilder);
     expect(octokitBuilder).toBeDefined();

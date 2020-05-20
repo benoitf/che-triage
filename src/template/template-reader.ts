@@ -15,7 +15,7 @@ export class TemplateReader {
     const files = (await fs.readdir(__dirname)).filter((file) => file.endsWith('.md'));
 
     for await (const file of files) {
-      const content = (await fs.readFile(path.join(__dirname, file))).toString();
+      const content = await fs.readFile(path.join(__dirname, file), 'utf8');
       templates.set(file.substring(0, file.length - '.md'.length), content);
     }
     this.templates = templates;

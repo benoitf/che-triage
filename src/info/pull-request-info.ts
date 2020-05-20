@@ -1,9 +1,19 @@
+import { inject, injectable } from 'inversify';
+
 import { IssueInfo } from './issue-info';
-import { injectable } from 'inversify';
+import { IssuesHelper } from '../helpers/issue-helper';
+import { PullRequestInfoLinkedIssuesExtractor } from './pull-request-info-linked-issues-extractor';
 
 export class PullRequestInfo extends IssueInfo {
   private __merged: boolean;
   private __mergingBranch: string;
+
+  private __linkedIssues: IssueInfo[];
+
+  public withLinkedIssues(linkedIssues: IssueInfo[]): PullRequestInfo {
+    this.__linkedIssues = linkedIssues;
+    return this;
+  }
 
   public withMergedState(merged: boolean): PullRequestInfo {
     this.__merged = merged;
@@ -13,6 +23,10 @@ export class PullRequestInfo extends IssueInfo {
   public withMergingBranch(mergingBranch: string): PullRequestInfo {
     this.__mergingBranch = mergingBranch;
     return this;
+  }
+
+  public get linkedIssues(): IssueInfo[] {
+    return this.__linkedIssues;
   }
 
   public get mergingBranch(): string {
@@ -26,6 +40,27 @@ export class PullRequestInfo extends IssueInfo {
 
 @injectable()
 export class PullRequestInfoBuilder {
+  @inject(PullRequestInfoLinkedIssuesExtractor)
+  private pullRequestInfoLinkedIssuesExtractor: PullRequestInfoLinkedIssuesExtractor;
+
+  @inject(IssuesHelper)
+  private issuesHelper: IssuesHelper;
+
+  async resolve(pullRequestInfo: PullRequestInfo): Promise<void> {
+    const extractedLinkedIssues = this.pullRequestInfoLinkedIssuesExtractor.extract(pullRequestInfo);
+    const linkedIssues: IssueInfo[] = [];
+    if (extractedLinkedIssues) {
+      // grab labels on the linked issues
+      for await (const extractedLinkedIssue of extractedLinkedIssues) {
+        const linkedIssueInfo = await this.issuesHelper.getIssue(extractedLinkedIssue);
+        if (linkedIssueInfo) {
+          linkedIssues.push(linkedIssueInfo);
+        }
+      }
+    }
+    pullRequestInfo.withLinkedIssues(linkedIssues);
+  }
+
   build(): PullRequestInfo {
     return new PullRequestInfo();
   }

@@ -61,7 +61,7 @@ describe('Test Logic AddWelcomeFirstPr', () => {
     expect(pullRequestAction.registerCallback).toBeCalled();
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = jest.fn() as any;
@@ -98,7 +98,7 @@ describe('Test Logic AddWelcomeFirstPr', () => {
     expect(pullRequestAction.registerCallback).toBeCalled();
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = jest.fn() as any;
@@ -114,7 +114,6 @@ describe('Test Logic AddWelcomeFirstPr', () => {
     expect(addCommentHelper.addComment).toBeCalledTimes(0);
     expect(templateReader.render).toBeCalledTimes(0);
   });
-
 
   test('test not First Time but has label', async () => {
     const addWelcomeFirstPRLogic = container.get(AddWelcomeFirstPRLogic);
@@ -132,7 +131,7 @@ describe('Test Logic AddWelcomeFirstPr', () => {
     expect(pullRequestAction.registerCallback).toBeCalled();
     const registerCallbackCall = (pullRequestAction as any).registerCallback.mock.calls[0];
 
-    expect(registerCallbackCall[0]).toEqual(AddWelcomeFirstPRLogic.PR_EVENT);
+    expect(registerCallbackCall[0]).toEqual([AddWelcomeFirstPRLogic.PR_EVENT]);
     const callback = registerCallbackCall[1];
 
     const pullRequestInfo: PullRequestInfo = jest.fn() as any;
