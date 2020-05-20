@@ -1,1 +1,1 @@
-FROM docker.pkg.github.com/benoitf/che-triage/bot
+FROM quay.io/fbenoit/che-triage:latest
