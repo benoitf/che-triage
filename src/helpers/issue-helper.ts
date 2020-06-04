@@ -29,6 +29,7 @@ export class IssuesHelper {
 
     const parsing = parsingRegexp.exec(issueLink);
 
+    // eslint-disable-next-line no-null/no-null
     if (parsing === null || parsing.length !== 4) {
       return undefined;
     }
@@ -37,13 +38,14 @@ export class IssuesHelper {
     const issueGetParam: Octokit.IssuesGetParams = {
       owner: parsing[1],
       repo: parsing[2],
+      // eslint-disable-next-line @typescript-eslint/camelcase
       issue_number: parseInt(parsing[3]),
     };
 
     const response = await this.octokit.issues.get(issueGetParam);
     const issueGetReponse: Octokit.IssuesGetResponse = response.data;
 
-    const labels: string[] = issueGetReponse.labels.map((label) => label.name);
+    const labels: string[] = issueGetReponse.labels.map(label => label.name);
 
     return this.issueInfoBuilder
       .build()

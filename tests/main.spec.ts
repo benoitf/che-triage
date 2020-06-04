@@ -40,8 +40,5 @@ describe('Test Main', () => {
     const main = new Main();
     await main.start();
     expect(core.setFailed).toBeCalledTimes(0);
-    expect(core.setOutput).toBeCalled();
-    const call = (core.setOutput as jest.Mock).mock.calls[0];
-    expect(call[0]).toMatch('time');
   });
 });

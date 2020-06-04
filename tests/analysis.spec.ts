@@ -40,7 +40,8 @@ describe('Test Analysis', () => {
     const call = (handler1.handle as jest.Mock).mock.calls[0];
 
     expect(call[0]).toEqual(eventName1);
-    expect(call[1]).toEqual(context1.payload);
+    expect(call[1]).toEqual(context1);
+    expect(call[2]).toEqual(context1.payload);
   });
 
   test('test handle refused', async () => {

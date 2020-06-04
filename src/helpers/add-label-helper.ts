@@ -11,7 +11,7 @@ export class AddLabelHelper {
 
   public async addLabel(labelsToAdd: string[], issueInfo: IssueInfo): Promise<void> {
     // filters labels already included
-    const remainingLabelsToAdd = labelsToAdd.filter((label) => !issueInfo.hasLabel(label));
+    const remainingLabelsToAdd = labelsToAdd.filter(label => !issueInfo.hasLabel(label));
 
     // if issue has already the label, do not trigger the add
     if (remainingLabelsToAdd.length === 0) {

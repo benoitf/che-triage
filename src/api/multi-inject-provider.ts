@@ -8,10 +8,7 @@ export interface MultiInjectProvider<T extends object> {
 class DefaultMultiInjectProvider<T extends object> implements MultiInjectProvider<T> {
   protected services: T[] | undefined;
 
-  constructor(
-    protected readonly serviceIdentifier: interfaces.ServiceIdentifier<T>,
-    protected readonly container: interfaces.Container
-  ) {}
+  constructor(protected readonly serviceIdentifier: interfaces.ServiceIdentifier<T>, protected readonly container: interfaces.Container) {}
 
   getAll(): T[] {
     if (this.services === undefined) {
@@ -36,7 +33,7 @@ export function bindMultiInjectProvider(bindable: Bindable, id: symbol): void {
     bindingToSyntax = (bindable as interfaces.Bind)(MultiInjectProvider);
   }
   bindingToSyntax
-    .toDynamicValue((ctx) => new DefaultMultiInjectProvider(id, ctx.container))
+    .toDynamicValue(ctx => new DefaultMultiInjectProvider(id, ctx.container))
     .inSingletonScope()
     .whenTargetNamed(id);
 }

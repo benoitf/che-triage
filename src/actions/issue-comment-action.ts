@@ -23,10 +23,7 @@ export class IssueCommentAction implements IssueCommentListener {
   /**
    * Add the callback provided by given command name
    */
-  registerIssueCommentCommand(
-    commandName: string,
-    issueCommandInfo: (issueCommentInfo: IssueCommentInfo) => Promise<void>
-  ): void {
+  registerIssueCommentCommand(commandName: string, issueCommandInfo: (issueCommentInfo: IssueCommentInfo) => Promise<void>): void {
     this.issueCommands.set(commandName, issueCommandInfo);
   }
 
@@ -43,10 +40,7 @@ export class IssueCommentAction implements IssueCommentListener {
 
     const command = this.issueCommands.get(commandName);
     if (command) {
-      const issueCommentInfo = this.issueCommentInfoBuilder
-        .build()
-        .withPayLoadIssues(payload)
-        .withCommentId(payload.comment.id);
+      const issueCommentInfo = this.issueCommentInfoBuilder.build().withPayLoadIssues(payload).withCommentId(payload.comment.id);
 
       this.addReactionCommentHelper.addReaction('+1', issueCommentInfo);
       await command(issueCommentInfo);

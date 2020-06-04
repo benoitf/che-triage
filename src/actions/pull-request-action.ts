@@ -20,7 +20,7 @@ export class PullRequestAction implements PullRequestListener {
    * Add the callback provided by given action name
    */
   registerCallback(events: string[], callback: (pullRequest: PullRequestInfo) => Promise<void>): void {
-    events.forEach((eventName) => {
+    events.forEach(eventName => {
       if (!this.pulllRequesCallbacks.has(eventName)) {
         this.pulllRequesCallbacks.set(eventName, []);
       }
@@ -34,7 +34,7 @@ export class PullRequestAction implements PullRequestListener {
 
     const callbacks = this.pulllRequesCallbacks.get(eventName);
     if (callbacks) {
-      const labels: string[] = payload.pull_request.labels.map((label) => label.name);
+      const labels: string[] = payload.pull_request.labels.map(label => label.name);
 
       const pullRequestInfo = this.pullRequestInfoBuilder
         .build()

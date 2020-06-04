@@ -12,7 +12,7 @@ export class TemplateReader {
     const templates = new Map<string, string>();
 
     // search all md files
-    const files = (await fs.readdir(__dirname)).filter((file) => file.endsWith('.md'));
+    const files = (await fs.readdir(__dirname)).filter(file => file.endsWith('.md'));
 
     for await (const file of files) {
       const content = await fs.readFile(path.join(__dirname, file), 'utf8');

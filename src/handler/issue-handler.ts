@@ -1,5 +1,6 @@
 import { inject, injectable, named } from 'inversify';
 
+import { Context } from '@actions/github/lib/context';
 import { Handler } from '../api/handler';
 import { IssueListener } from '../api/issue-listener';
 import { MultiInjectProvider } from '../api/multi-inject-provider';
@@ -16,12 +17,12 @@ export class IssueHandler implements Handler {
     return 'issues' === eventName;
   }
 
-  async handle(eventName: string, webhookPayLoad: WebhookPayload): Promise<void> {
+  async handle(eventName: string, context: Context, webhookPayLoad: WebhookPayload): Promise<void> {
     //
 
     // cast payload
     const issuePayLoad = webhookPayLoad as WebhookPayloadIssues;
 
-    await Promise.all(this.issueListeners.getAll().map(async (listener) => listener.execute(issuePayLoad)));
+    await Promise.all(this.issueListeners.getAll().map(async listener => listener.execute(issuePayLoad)));
   }
 }

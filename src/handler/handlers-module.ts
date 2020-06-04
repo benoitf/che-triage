@@ -4,6 +4,7 @@ import { Handler } from '../api/handler';
 import { IssueCommentHandler } from './issue-comment-handler';
 import { IssueHandler } from './issue-handler';
 import { PullRequestHandler } from './pull-request-handler';
+import { ScheduleHandler } from './schedule-handler';
 import { bindMultiInjectProvider } from '../api/multi-inject-provider';
 
 const handlersModule = new ContainerModule((bind: interfaces.Bind) => {
@@ -11,6 +12,7 @@ const handlersModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(Handler).to(IssueCommentHandler).inSingletonScope();
   bind(Handler).to(IssueHandler).inSingletonScope();
   bind(Handler).to(PullRequestHandler).inSingletonScope();
+  bind(Handler).to(ScheduleHandler).inSingletonScope();
 });
 
 export { handlersModule };

@@ -24,9 +24,7 @@ export class AddMilestoneHelper {
     // search if milestone is already defined
     const response = await this.octokitRead.issues.listMilestonesForRepo(issuesGetMilestonesParams);
     let githubMilestone: Octokit.IssuesListMilestonesForRepoResponseItem | undefined = response.data.find(
-      (milestoneResponse: Octokit.IssuesListMilestonesForRepoResponseItem) => {
-        return milestoneResponse.title === milestone;
-      }
+      (milestoneResponse: Octokit.IssuesListMilestonesForRepoResponseItem) => milestoneResponse.title === milestone
     );
 
     // not defined, create it
@@ -36,8 +34,8 @@ export class AddMilestoneHelper {
         repo: issueInfo.repo,
         title: milestone,
       };
-      const response = await this.octokitWrite.issues.createMilestone(issuesCreateMilestoneParams);
-      githubMilestone = response.data;
+      const createMilestoneResponse = await this.octokitWrite.issues.createMilestone(issuesCreateMilestoneParams);
+      githubMilestone = createMilestoneResponse.data;
     }
 
     // Grab the number

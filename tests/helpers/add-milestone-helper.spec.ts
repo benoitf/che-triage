@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import { PullRequestInfo, PullRequestInfoBuilder } from '../../src/info/pull-request-info';

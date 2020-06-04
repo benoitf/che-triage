@@ -2,6 +2,9 @@
 
 import 'reflect-metadata';
 
+import * as fs from 'fs-extra';
+import * as path from 'path';
+
 import { IssueInfo, IssueInfoBuilder } from '../../src/info/issue-info';
 
 import { Container } from 'inversify';
@@ -20,7 +23,7 @@ describe('Test Helper IssueHelper', () => {
     container.bind(IssuesHelper).toSelf().inSingletonScope();
   });
 
-  test('test with firstTime true', async () => {
+  test('test isFirstTime true', async () => {
     const octokit: any = { issues: { listForRepo: jest.fn() } };
 
     container.bind(Octokit).toConstantValue(octokit);
@@ -52,7 +55,7 @@ describe('Test Helper IssueHelper', () => {
     expect(isFirstTime).toBeTruthy();
   });
 
-  test('test with firstTime false', async () => {
+  test('test isFirstTime false', async () => {
     const octokit: any = { issues: { listForRepo: jest.fn() } };
 
     container.bind(Octokit).toConstantValue(octokit);
@@ -82,5 +85,52 @@ describe('Test Helper IssueHelper', () => {
     expect(params.owner).toBe(issueInfo.owner);
 
     expect(isFirstTime).toBeFalsy();
+  });
+
+  test('test getIssue undefined invalid string', async () => {
+    const octokit: any = {};
+    container.bind(Octokit).toConstantValue(octokit);
+    const issueHelper = container.get(IssuesHelper);
+
+    const result: IssueInfo | undefined = await issueHelper.getIssue('issueInfo');
+    expect(result).toBeUndefined();
+  });
+
+  test('test getIssue valid', async () => {
+    issueInfoBuilder = new IssueInfoBuilder();
+    jest.spyOn(issueInfoBuilder, 'build');
+
+    container.rebind(IssueInfoBuilder).toConstantValue(issueInfoBuilder);
+
+    const octokit: any = { issues: { get: jest.fn() } };
+
+    container.bind(Octokit).toConstantValue(octokit);
+    const issueHelper = container.get(IssuesHelper);
+
+    const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue-helper', 'get-issue.json'));
+
+    // empty response
+    const response: any = { data: json };
+
+    (octokit.issues.get as jest.Mock).mockReturnValue(response);
+
+    const issueInfo: IssueInfo | undefined = await issueHelper.getIssue('/repos/benoitf/demo-gh-event/issues/24');
+    expect(issueInfo).toBeDefined();
+
+    expect(octokit.issues.get).toBeCalled();
+    const params: Octokit.IssuesGetParams = octokit.issues.get.mock.calls[0][0];
+
+    expect(params.owner).toBe('benoitf');
+    expect(params.repo).toBe('demo-gh-event');
+    expect(params.issue_number).toBe(24);
+
+    expect(issueInfoBuilder.build).toBeCalled();
+    expect(issueInfo?.body).toMatch('### What does this PR do');
+    expect(issueInfo?.author).toBe('benoitf');
+    expect(issueInfo?.htmlLink).toBe('https://github.com/benoitf/demo-gh-event/pull/24');
+    expect(issueInfo?.number).toBe(24);
+    expect(issueInfo?.owner).toBe('benoitf');
+    expect(issueInfo?.repo).toBe('demo-gh-event');
+    expect(issueInfo?.labels).toEqual(['kind/bar', 'kind/baz', 'kind/dummy', 'kind/foo']);
   });
 });

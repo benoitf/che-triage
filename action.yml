@@ -7,9 +7,6 @@ inputs:
   write-token:
     description: 'GITHUB token used to manage issues/pull requests'
     required: true
-outputs:
-  time:
-    description: 'The time'
 runs:
   using: 'docker'
   image: './action.Dockerfile'

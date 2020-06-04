@@ -27,20 +27,22 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^23.11.0",
+    "eslint-plugin-no-null": "^1.0.2",
     "import-sort-style-eslint": "^6.0.0",
     "jest": "^25.0.0",
     "nexe": "4.0.0-beta.6",
     "prettier": "^2.0.5",
     "prettier-plugin-import-sort": "^0.0.4",
     "ts-jest": "^25.5.1",
+    "tslint": "^6.1.2",
     "typescript": "^3.8.3"
   },
   "scripts": {
+    "build": "yarn run lint && yarn run test && yarn run compile",
     "compile": "tsc --project . && cpx './src/template/*.md' './dist/template' --clean",
     "format": "prettier --write **/*.ts **/**/*.ts package.json tests/_data/**/*.* tests/_data/**/**/*.*",
     "format-check": "prettier --check **/*.ts **/**/*.ts",
     "lint": "eslint . --ext .ts",
-    "pack": "ncc build",
     "test": "jest"
   },
   "jest": {
@@ -49,6 +51,14 @@
       "src/**/*.ts"
     ],
     "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
@@ -65,8 +75,9 @@
     ]
   },
   "prettier": {
-    "printWidth": 120,
-    "singleQuote": true
+    "printWidth": 140,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   },
   "importSort": {
     ".ts": {

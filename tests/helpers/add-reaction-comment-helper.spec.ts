@@ -33,8 +33,7 @@ describe('Test Helper AddReactionCommentHelper', () => {
     await addReactionCommentHelper.addReaction(reaction, issueCommentInfo);
 
     expect(octokit.reactions.createForIssueComment).toBeCalled();
-    const params: Octokit.ReactionsCreateForIssueCommentParams =
-      octokit.reactions.createForIssueComment.mock.calls[0][0];
+    const params: Octokit.ReactionsCreateForIssueCommentParams = octokit.reactions.createForIssueComment.mock.calls[0][0];
 
     expect(params.content).toBe(reaction);
     expect(params.comment_id).toBe(issueCommentInfo.commentId);

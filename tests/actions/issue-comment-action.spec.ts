@@ -47,9 +47,7 @@ describe('Test Action IssueCommentAction', () => {
   test('test single created execute', async () => {
     const issueCommentAction = container.get(IssueCommentAction);
 
-    const json = await fs.readJSON(
-      path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'remove-lifecycle-stale.json')
-    );
+    const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'remove-lifecycle-stale.json'));
 
     const fooMock: any = { dummyCall: jest.fn() };
     let issueCommentInfo: IssueCommentInfo = jest.fn() as any;
@@ -76,9 +74,7 @@ describe('Test Action IssueCommentAction', () => {
   test('test single edited execute', async () => {
     const issueCommentAction = container.get(IssueCommentAction);
 
-    const json = await fs.readJSON(
-      path.join(__dirname, '..', '_data', 'issue_comment', 'edited', 'remove-lifecycle-stale.json')
-    );
+    const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'edited', 'remove-lifecycle-stale.json'));
 
     const fooMock: any = { dummyCall: jest.fn() };
     let issueCommentInfo: IssueCommentInfo = jest.fn() as any;
@@ -105,9 +101,7 @@ describe('Test Action IssueCommentAction', () => {
   test('test single deleted execute', async () => {
     const issueCommentAction = container.get(IssueCommentAction);
 
-    const json = await fs.readJSON(
-      path.join(__dirname, '..', '_data', 'issue_comment', 'deleted', 'remove-lifecycle-stale.json')
-    );
+    const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'deleted', 'remove-lifecycle-stale.json'));
 
     const fooMock: any = { dummyCall: jest.fn() };
     let issueCommentInfo: IssueCommentInfo | undefined = undefined;

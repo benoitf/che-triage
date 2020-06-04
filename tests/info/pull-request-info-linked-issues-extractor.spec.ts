@@ -19,10 +19,7 @@ describe('Test PullRequestInfoLinkedIssuesExtractor', () => {
     const pullRequestInfoLinkedIssuesExtractor = container.get(PullRequestInfoLinkedIssuesExtractor);
     expect(pullRequestInfoLinkedIssuesExtractor).toBeDefined();
 
-    const txt: string = await fs.readFile(
-      path.join(__dirname, '..', '_data', 'pull-request-info', 'multiple-links.md'),
-      'utf8'
-    );
+    const txt: string = await fs.readFile(path.join(__dirname, '..', '_data', 'pull-request-info', 'multiple-links.md'), 'utf8');
 
     const pullRequestInfo = jest.fn() as any;
     pullRequestInfo.body = txt;
@@ -49,10 +46,7 @@ describe('Test PullRequestInfoLinkedIssuesExtractor', () => {
     pullRequestInfo.repo = 'che';
     const issues = pullRequestInfoLinkedIssuesExtractor.extract(pullRequestInfo);
 
-    expect(issues).toEqual([
-      'https://api.github.com/repos/eclipse/che/issues/15',
-      'https://api.github.com/repos/eclipse/che/issues/16',
-    ]);
+    expect(issues).toEqual(['https://api.github.com/repos/eclipse/che/issues/15', 'https://api.github.com/repos/eclipse/che/issues/16']);
   });
 
   test('test empty text', async () => {

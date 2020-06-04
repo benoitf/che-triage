@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import * as fs from 'fs-extra';
@@ -38,7 +39,7 @@ describe('Test Issue Handler', () => {
     expect(handler.constructor.name).toEqual(IssueHandler.name);
     const issueHandler: IssueHandler = handler as IssueHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue', 'opened', 'create-new-issue.json'));
-    issueHandler.handle('issues', json);
+    issueHandler.handle('issues', {} as any, json);
     expect(issueHandler['issueListeners'].getAll()).toEqual([]);
   });
 
@@ -49,7 +50,7 @@ describe('Test Issue Handler', () => {
     expect(handler.constructor.name).toEqual(IssueHandler.name);
     const issueHandler: IssueHandler = handler as IssueHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue', 'opened', 'create-new-issue.json'));
-    issueHandler.handle('issues', json);
+    issueHandler.handle('issues', {} as any, json);
     expect(listener.execute).toBeCalled();
   });
 
@@ -64,7 +65,7 @@ describe('Test Issue Handler', () => {
     expect(handler.constructor.name).toEqual(IssueHandler.name);
     const issueHandler: IssueHandler = handler as IssueHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue', 'opened', 'create-new-issue.json'));
-    issueHandler.handle('issues', json);
+    issueHandler.handle('issues', {} as any, json);
 
     // two listeners
     expect(issueHandler['issueListeners'].getAll().length).toEqual(2);

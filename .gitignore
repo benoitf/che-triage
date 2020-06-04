@@ -4,5 +4,5 @@ coverage
 .vscode
 node_modules
 dist
-
+publish.sh
 yarn-error.log

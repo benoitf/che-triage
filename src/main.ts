@@ -25,10 +25,6 @@ export class Main {
     const container = inversifyBinbding.initBindings();
     const analysis = container.get(Analysis);
     await analysis.analyze(github.context);
-
-    // now execute
-    const endTime = new Date().toTimeString();
-    core.setOutput('time', endTime);
   }
 
   async start(): Promise<boolean> {

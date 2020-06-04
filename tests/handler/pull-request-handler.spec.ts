@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import * as fs from 'fs-extra';
@@ -38,7 +39,7 @@ describe('Test PullRequestHandler', () => {
     expect(handler.constructor.name).toEqual(PullRequestHandler.name);
     const prHandler: PullRequestHandler = handler as PullRequestHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'pull_request', 'opened', 'create-pr.json'));
-    prHandler.handle('pull_request', json);
+    prHandler.handle('pull_request', {} as any, json);
     expect(prHandler['pullRequestListeners'].getAll()).toEqual([]);
   });
 
@@ -49,7 +50,7 @@ describe('Test PullRequestHandler', () => {
     expect(handler.constructor.name).toEqual(PullRequestHandler.name);
     const prHandler: PullRequestHandler = handler as PullRequestHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'pull_request', 'opened', 'create-pr.json'));
-    prHandler.handle('pull_request', json);
+    prHandler.handle('pull_request', {} as any, json);
     expect(listener.execute).toBeCalled();
   });
 
@@ -64,7 +65,7 @@ describe('Test PullRequestHandler', () => {
     expect(handler.constructor.name).toEqual(PullRequestHandler.name);
     const prHandler: PullRequestHandler = handler as PullRequestHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'pull_request', 'opened', 'create-pr.json'));
-    prHandler.handle('issues', json);
+    prHandler.handle('issues', {} as any, json);
 
     // two listeners
     expect(prHandler['pullRequestListeners'].getAll().length).toEqual(2);

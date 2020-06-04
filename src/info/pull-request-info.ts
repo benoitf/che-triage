@@ -8,7 +8,7 @@ export class PullRequestInfo extends IssueInfo {
   private __merged: boolean;
   private __mergingBranch: string;
 
-  private __linkedIssues: IssueInfo[];
+  private __linkedIssues: IssueInfo[] = [];
 
   public withLinkedIssues(linkedIssues: IssueInfo[]): PullRequestInfo {
     this.__linkedIssues = linkedIssues;

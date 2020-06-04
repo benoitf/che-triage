@@ -20,7 +20,7 @@ export class IssueAction implements IssueListener {
    * Add the callback provided by given event name
    */
   registerCallback(events: string[], callback: (issueInfo: IssueInfo) => Promise<void>): void {
-    events.forEach((eventName) => {
+    events.forEach(eventName => {
       if (!this.issueCallbacks.has(eventName)) {
         this.issueCallbacks.set(eventName, []);
       }

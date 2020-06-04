@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import * as fs from 'fs-extra';
@@ -38,7 +39,7 @@ describe('Test Issue Comment Handler', () => {
     expect(handler.constructor.name).toEqual(IssueCommentHandler.name);
     const issueCommentHandler: IssueCommentHandler = handler as IssueCommentHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'new-comment.json'));
-    issueCommentHandler.handle('issue_comment', json);
+    issueCommentHandler.handle('issue_comment', {} as any, json);
     expect(issueCommentHandler['issueCommentListeners'].getAll()).toEqual([]);
   });
 
@@ -49,7 +50,7 @@ describe('Test Issue Comment Handler', () => {
     expect(handler.constructor.name).toEqual(IssueCommentHandler.name);
     const issueCommentHandler: IssueCommentHandler = handler as IssueCommentHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'new-comment.json'));
-    issueCommentHandler.handle('issue_comment', json);
+    issueCommentHandler.handle('issue_comment', {} as any, json);
     expect(listener.execute).toBeCalled();
   });
 
@@ -64,7 +65,7 @@ describe('Test Issue Comment Handler', () => {
     expect(handler.constructor.name).toEqual(IssueCommentHandler.name);
     const issueCommentHandler: IssueCommentHandler = handler as IssueCommentHandler;
     const json = await fs.readJSON(path.join(__dirname, '..', '_data', 'issue_comment', 'created', 'new-comment.json'));
-    issueCommentHandler.handle('issue_comment', json);
+    issueCommentHandler.handle('issue_comment', {} as any, json);
 
     // two listeners
     expect(issueCommentHandler['issueCommentListeners'].getAll().length).toEqual(2);

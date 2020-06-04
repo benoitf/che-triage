@@ -11,7 +11,10 @@ import { AddWelcomeFirstIssueLogic } from '../src/logic/add-welcome-first-issue'
 import { AddWelcomeFirstPRLogic } from '../src/logic/add-welcome-first-pr';
 import { Analysis } from '../src/analysis';
 import { CheVersionFetcher } from '../src/fetchers/che-version-fetcher';
+import { CloseIssueHelper } from '../src/helpers/close-issue-helper';
 import { Container } from 'inversify';
+import { CronAddStaleIssuesLogic } from '../src/logic/cron-add-stale-issues';
+import { CronCloseStaleIssuesLogic } from '../src/logic/cron-close-stale-issues';
 import { Handler } from '../src/api/handler';
 import { InversifyBinding } from '../src/inversify-binding';
 import { IssueAction } from '../src/actions/issue-action';
@@ -32,6 +35,8 @@ import { PullRequestInfoBuilder } from '../src/info/pull-request-info';
 import { PullRequestListener } from '../src/api/pull-request-listener';
 import { RemoveLabelHelper } from '../src/helpers/remove-label-helper';
 import { RemoveLifeCycleStaleLogic } from '../src/logic/remove-lifecycle-stale-logic';
+import { ScheduleHandler } from '../src/handler/schedule-handler';
+import { ScheduleListener } from '../src/api/schedule-listener';
 import { TemplateReader } from '../src/template/template-reader';
 
 describe('Test InversifyBinding', () => {
@@ -62,9 +67,15 @@ describe('Test InversifyBinding', () => {
 
     // Handler
     const handlers: Handler[] = container.getAll(Handler);
-    expect(handlers.find((handler) => handler.constructor.name === IssueCommentHandler.name)).toBeTruthy();
-    expect(handlers.find((handler) => handler.constructor.name === IssueHandler.name)).toBeTruthy();
-    expect(handlers.find((handler) => handler.constructor.name === PullRequestHandler.name)).toBeTruthy();
+    expect(handlers.find(handler => handler.constructor.name === IssueCommentHandler.name)).toBeTruthy();
+    expect(handlers.find(handler => handler.constructor.name === IssueHandler.name)).toBeTruthy();
+    expect(handlers.find(handler => handler.constructor.name === PullRequestHandler.name)).toBeTruthy();
+    expect(handlers.find(handler => handler.constructor.name === ScheduleHandler.name)).toBeTruthy();
+
+    const scheduleListeners: ScheduleListener[] = container.getAll(ScheduleListener);
+    expect(scheduleListeners).toBeDefined();
+    expect(scheduleListeners.find(listener => listener.constructor.name === CronAddStaleIssuesLogic.name)).toBeTruthy();
+    expect(scheduleListeners.find(listener => listener.constructor.name === CronCloseStaleIssuesLogic.name)).toBeTruthy();
 
     // fetcher
     expect(container.get(CheVersionFetcher)).toBeDefined();
@@ -77,6 +88,7 @@ describe('Test InversifyBinding', () => {
     expect(container.get(IssuesHelper)).toBeDefined();
     expect(container.get(PullRequestHelper)).toBeDefined();
     expect(container.get(RemoveLabelHelper)).toBeDefined();
+    expect(container.get(CloseIssueHelper)).toBeDefined();
 
     // check all info
     expect(container.get(IssueInfoBuilder)).toBeDefined();
@@ -89,12 +101,14 @@ describe('Test InversifyBinding', () => {
     // logic
     const logics: Logic[] = container.getAll(Logic);
     expect(logics).toBeDefined();
-    expect(logics.find((logic) => logic.constructor.name === AddCheMilestoneOnMergedPRLogic.name)).toBeTruthy();
-    expect(logics.find((logic) => logic.constructor.name === AddStatusTriageLogic.name)).toBeTruthy();
-    expect(logics.find((logic) => logic.constructor.name === AddWelcomeFirstIssueLogic.name)).toBeTruthy();
-    expect(logics.find((logic) => logic.constructor.name === AddWelcomeFirstPRLogic.name)).toBeTruthy();
-    expect(logics.find((logic) => logic.constructor.name === RemoveLifeCycleStaleLogic.name)).toBeTruthy();
-    expect(logics.find((logic) => logic.constructor.name === AddKindFromLinkedIssuesLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === AddCheMilestoneOnMergedPRLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === AddStatusTriageLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === AddWelcomeFirstIssueLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === AddWelcomeFirstPRLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === RemoveLifeCycleStaleLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === AddKindFromLinkedIssuesLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === CronAddStaleIssuesLogic.name)).toBeTruthy();
+    expect(logics.find(logic => logic.constructor.name === CronCloseStaleIssuesLogic.name)).toBeTruthy();
 
     const octokitBuilder = container.get(OctokitBuilder);
     expect(octokitBuilder).toBeDefined();

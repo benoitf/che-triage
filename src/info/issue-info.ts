@@ -11,7 +11,7 @@ export class IssueInfo {
   private __body: string;
 
   public withPayLoadIssues(payload: Webhooks.WebhookPayloadIssues): this {
-    const labels: string[] = payload.issue.labels.map((label) => label.name);
+    const labels: string[] = payload.issue.labels.map(label => label.name);
     return this.withNumber(payload.issue.number)
       .withAuthor(payload.issue.user.login)
       .withHtmlLink(payload.issue.html_url)
